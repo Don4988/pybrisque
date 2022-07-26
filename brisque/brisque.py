@@ -1,18 +1,19 @@
 # coding=utf-8
 import os
 from ctypes import c_double
+import pickle
 
 import cv2
 import numpy as np
 from scipy.special import gamma
-import svmutil
-from svmutil import gen_svm_nodearray
-
+from libsvm import svmutil,svm
 from brisque.utilities import root_path
-
 
 class BRISQUE(object):
     def __init__(self):
+        # load brisque SVR model
+        with open(root_path('brisque', '100kSVRmodel2.pkl'), 'rb') as f:
+            self.svrModel = pickle.load(f)
         self._model = svmutil.svm_load_model(root_path('brisque', 'allmodel'))
         self._scaler = np.array([
             [-1, 1], [0.338, 10], [0.017204, 0.806612], [0.236, 1.642],
@@ -177,7 +178,7 @@ class BRISQUE(object):
         :param scaled_feature: Scaled brisque feature.
         :type scaled_feature: np.ndarray
         """
-        x, idx = gen_svm_nodearray(
+        x, idx = svm.gen_svm_nodearray(
             scaled_feature.tolist(),
             isKernel=(self._model.param.kernel_type == 'PRECOMPUTED')
         )
@@ -186,3 +187,11 @@ class BRISQUE(object):
 
         return svmutil.libsvm.svm_predict_probability(
             self._model, x, prob_estimates)
+    
+    def predictAcc(self,imgPath):
+        features = self.get_feature(imgPath)
+        features = features.reshape((1, -1))
+        print(features)
+
+        predict = self.svrModel.predict(features)
+        return predict[0]
