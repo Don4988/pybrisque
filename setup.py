@@ -14,7 +14,7 @@ setup(
     version='1.0',
     packages=find_packages(),
     package_data={
-        'brisque': ['allmodel']
+        'brisque': ['allmodel','SVRmodel.pkl']
     },
     license='GPL',
     author='Akbar Gumbira',
