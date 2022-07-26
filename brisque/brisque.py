@@ -191,7 +191,6 @@ class BRISQUE(object):
     def predictAcc(self,imgPath):
         features = self.get_feature(imgPath)
         features = features.reshape((1, -1))
-        print(features)
 
         predict = self.svrModel.predict(features)
         return predict[0]
