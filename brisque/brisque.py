@@ -12,7 +12,7 @@ from brisque.utilities import root_path
 class BRISQUE(object):
     def __init__(self):
         # load brisque SVR model
-        with open(root_path('brisque', '100kSVRmodel.pkl'), 'rb') as f:
+        with open(root_path('brisque', 'SVRmodel.pkl'), 'rb') as f:
             self.svrModel = pickle.load(f)
         self._model = svmutil.svm_load_model(root_path('brisque', 'allmodel'))
         self._scaler = np.array([
